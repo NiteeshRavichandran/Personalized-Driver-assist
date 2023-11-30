@@ -5,6 +5,7 @@ import time
 import dlib
 import cv2
 from datetime import datetime
+import csv
 
 def get_max_area_rect(rects):
     if len(rects) == 0: return
@@ -43,9 +44,15 @@ def facial_processing():
 
     cap = cv2.VideoCapture(0)
 
+    with open(output_file_path, 'w', newline='') as csvfile:
+        fieldnames = ['Date', 'Interval', 'Type']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
     fps_counter = 0
     fps_to_display = 'initializing...'
     fps_timer = time.time()
+
 
     while True:
         _, frame = cap.read()
@@ -70,7 +77,7 @@ def facial_processing():
                 interval = str(round(interval, 3))
                 dateTime = datetime.now()
                 distracton_initialized = False
-                info = "Date: " + str(dateTime) + ", Interval: " + interval + ", Type: Eyes not on road"
+                info = str(dateTime) + "," + interval + ",Eyes not on road"
                 info = info + "\n"
                 if time.time() - distracton_start_time > DISTRACTION_INTERVAL:
                     with open(output_file_path, "a+") as file_object:
@@ -114,8 +121,8 @@ def facial_processing():
                     interval_eye = time.time() - eye_start_time
                     interval_eye = str(round(interval_eye, 3))
                     dateTime_eye = datetime.now()
-                    eye_initialized = Falseq
-                    info_eye = "Date: " + str(dateTime_eye) + ", Interval: " + interval_eye + ", Type:Drowsy"
+                    eye_initialized = False
+                    info_eye = str(dateTime_eye) + "," + interval_eye + ",Drowsy"
                     info_eye = info_eye + "\n"
                     if time.time() - eye_start_time >= EYE_DROWSINESS_INTERVAL:
                         with open(output_file_path, "a+") as file_object:
@@ -136,7 +143,7 @@ def facial_processing():
                     interval_mouth = str(round(interval_mouth, 3))
                     dateTime_mouth = datetime.now()
                     mouth_initialized = False
-                    info_mouth = "Date: " + str(dateTime_mouth) + ", Interval: " + interval_mouth + ", Type:Yawning"
+                    info_mouth = str(dateTime_mouth) + "," + interval_mouth + ",Yawning"
                     info_mouth = info_mouth + "\n"
                     if time.time() - mouth_start_time >= MOUTH_DROWSINESS_INTERVAL:
                         with open(output_file_path, "a+") as file_object:
@@ -158,7 +165,7 @@ def facial_processing():
                     interval_normal = str(round(interval_normal, 3))
                     dateTime_normal = datetime.now()
                     normal_initialized = False
-                    info_normal = "Date: " + str(dateTime_normal) + ", Interval: " + interval_normal + ", Type:Normal"
+                    info_normal = str(dateTime_normal) + "," + interval_normal + ",Normal"
                     info_normal = info_normal + "\n"
                     if time.time() - normal_start_time >= NORMAL_INTERVAL:
                         with open(output_file_path, "a+") as file_object:
@@ -170,7 +177,7 @@ def facial_processing():
                 interval_eye = str(round(interval_eye, 3))
                 dateTime_eye = datetime.now()
                 eye_initialized = False
-                info_eye = "Date: " + str(dateTime_eye) + ", Interval: " + interval_eye + ", Type:Drowsy"
+                info_eye = str(dateTime_eye) + "," + interval_eye + ",Drowsy"
                 info_eye = info_eye + "\n"
                 if time.time() - eye_start_time >= EYE_DROWSINESS_INTERVAL:
                     with open(output_file_path, "a+") as file_object:
